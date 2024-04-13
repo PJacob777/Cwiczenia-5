@@ -46,6 +46,22 @@ app.MapPut("/Animal/{id:int}", (IMockDb mochDb, Animal animal, int id) =>
     return Results.Created();
 
 });
+app.MapDelete("/Animal", (Animal animal, IMockDb mockDb) =>
+{
+    var toDelete = mockDb.GetAnimal(animal.ID);
+    if (toDelete is null) return Results.BadRequest();
+    mockDb.DeleteAnimal(animal);
+    return Results.Ok();
+});
+app.MapPost("/Visit", (IMockDb mochDb, Visit visit) =>
+{
+    mochDb.AddVisit(visit);
+    return Results.Created();
+});
+app.MapGet("/GetVisits", (IMockDb mockDb) =>
+{
+    return Results.Ok(mockDb.GetAllVisits());
+});
 app.MapControllers();
 app.Run();
 
